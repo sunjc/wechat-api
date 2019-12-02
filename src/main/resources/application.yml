@@ -1,0 +1,44 @@
+spring:
+  profiles:
+    active: @project.profile@
+  banner:
+    charset: utf-8
+    location: classpath:banner.txt
+  messages:
+    encoding: UTF-8
+    basename: messages
+  resources:
+    add-mappings: true
+  security:
+    oauth2:
+      client:
+        registration:
+          weixin:
+            client-id:
+            client-secret:
+            redirect-uri: http://wechat.itrunner.org/login/oauth2/code/weixin
+            authorization-grant-type: authorization_code
+            scope: snsapi_userinfo
+        provider:
+          weixin:
+            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-name-attribute: openid
+
+info:
+  app:
+    name: wechat
+    version: 1.0
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  forward-headers-strategy: native
+
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
