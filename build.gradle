@@ -15,9 +15,7 @@ configurations {
 }
 
 repositories {
-	maven {
-		url "http://10.188.17.100:8082/repository/maven-public"
-	}
+	mavenCentral()
 }
 
 dependencies {
