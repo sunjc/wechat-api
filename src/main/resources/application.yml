@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: @project.profile@
+    active: dev
   banner:
     charset: utf-8
     location: classpath:banner.txt
@@ -32,7 +32,7 @@ info:
     version: 1.0
 
 server:
-  port: 8080
+  port: 80
   servlet:
     context-path: /api
   forward-headers-strategy: native

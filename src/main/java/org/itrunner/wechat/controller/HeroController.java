@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "${api.base-path}", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/heroes", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = {"Hero Controller"})
 @Slf4j
 public class HeroController {
@@ -26,37 +26,37 @@ public class HeroController {
     }
 
     @ApiOperation("Get hero by id")
-    @GetMapping("/heroes/{id}")
+    @GetMapping("/{id}")
     public Hero getHeroById(@ApiParam(required = true, example = "1") @PathVariable("id") Long id) {
         return service.getHeroById(id);
     }
 
-    @ApiOperation("Get all wechat")
-    @GetMapping("/heroes")
+    @ApiOperation("Get all heroes")
+    @GetMapping
     public List<Hero> getHeroes() {
         return service.getAllHeroes();
     }
 
-    @ApiOperation("Search wechat by name")
-    @GetMapping("/heroes/")
+    @ApiOperation("Search heroes by name")
+    @GetMapping("/")
     public List<Hero> searchHeroes(@ApiParam(required = true) @RequestParam("name") String name) {
         return service.findHeroesByName(name);
     }
 
     @ApiOperation("Add new hero")
-    @PostMapping("/heroes")
+    @PostMapping
     public Hero addHero(@ApiParam(required = true) @Valid @RequestBody Hero hero) {
         return service.saveHero(hero);
     }
 
     @ApiOperation("Update hero info")
-    @PutMapping("/heroes")
+    @PutMapping
     public Hero updateHero(@ApiParam(required = true) @Valid @RequestBody Hero hero) {
         return service.saveHero(hero);
     }
 
     @ApiOperation("Delete hero by id")
-    @DeleteMapping("/heroes/{id}")
+    @DeleteMapping("/{id}")
     public void deleteHero(@ApiParam(required = true, example = "1") @PathVariable("id") Long id) {
         service.deleteHero(id);
     }
