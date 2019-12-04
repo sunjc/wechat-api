@@ -14,8 +14,8 @@ spring:
       client:
         registration:
           weixin:
-            client-id:
-            client-secret:
+            client-id: wx2226666666666666
+            client-secret: 39899999999999999999999999999999
             redirect-uri: http://wechat.itrunner.org/login/oauth2/code/weixin
             authorization-grant-type: authorization_code
             scope: snsapi_userinfo
@@ -29,12 +29,10 @@ spring:
 info:
   app:
     name: wechat
-    version: 1.0
+    version: 1.0.0
 
 server:
   port: 80
-  servlet:
-    context-path: /api
   forward-headers-strategy: native
 
 springfox:
@@ -42,3 +40,6 @@ springfox:
     swagger:
       v2:
         path: /api-docs
+
+security:
+  ignore-paths: /api-docs,/swagger-resources/**,/swagger-ui.html**,/webjars/**

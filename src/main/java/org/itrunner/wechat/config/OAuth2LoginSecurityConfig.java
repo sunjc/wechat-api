@@ -1,15 +1,27 @@
 package org.itrunner.wechat.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 @EnableWebSecurity
 public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
+    @Value("${security.ignore-paths}")
+    private String[] ignorePaths;
+
+    private final ClientRegistrationRepository clientRegistrationRepository;
+
+    public OAuth2LoginSecurityConfig(ClientRegistrationRepository clientRegistrationRepository) {
+        this.clientRegistrationRepository = clientRegistrationRepository;
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers(ignorePaths);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
