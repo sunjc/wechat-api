@@ -18,3 +18,11 @@ spring:
     username: hero
     password: ENC(/gpfe5d4qWBwKaQ5KgPaOA==)
     initialization-mode: never
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    password: 1qefhQH7mRR4LADVettR
+    stringOutputType: base64
+    property:
+      prefix: ENC(
+      suffix: )
