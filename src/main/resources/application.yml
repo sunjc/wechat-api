@@ -13,6 +13,9 @@ spring:
     oauth2:
       client:
         registration:
+#          github:
+#            client-id: 34fbdcaae11111111111
+#            client-secret: ca32a5ea5ad4b357777777777777777777777777
           weixin:
             client-id: wx2226666666666666
             client-secret: 39899999999999999999999999999999

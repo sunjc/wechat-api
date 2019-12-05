@@ -10,6 +10,6 @@ import java.util.Optional;
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
-        return Optional.of(OAuth2Context.getOpenId());
+        return Optional.of(OAuth2Context.getPrincipalName());
     }
 }
