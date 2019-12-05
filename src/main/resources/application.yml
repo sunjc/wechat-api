@@ -2,7 +2,7 @@ spring:
   profiles:
     active: dev
   banner:
-    charset: utf-8
+    charset: UTF-8
     location: classpath:banner.txt
   messages:
     encoding: UTF-8

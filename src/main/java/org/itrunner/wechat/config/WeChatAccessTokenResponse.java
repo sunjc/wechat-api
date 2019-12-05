@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -36,7 +33,7 @@ public class WeChatAccessTokenResponse {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(json, WeChatAccessTokenResponse.class);
         } catch (JsonProcessingException e) {
-            log.error("An error occurred while attempting to parse the weixin Access Token Response: " + e.getMessage());
+            log.error("An error occurred while attempting to parse the WeiXin Access Token Response: " + e.getMessage());
             return null;
         }
     }
@@ -46,17 +43,14 @@ public class WeChatAccessTokenResponse {
         builder.tokenType(OAuth2AccessToken.TokenType.BEARER);
         builder.expiresIn(expiresIn);
         builder.refreshToken(refreshToken);
-        String[] scopes = scope.split(",");
 
+        String[] scopes = scope.split(",");
         Set<String> scopeSet = new HashSet<>();
-        for (String scope : scopes) {
-            scopeSet.add(scope);
-        }
+        Collections.addAll(scopeSet, scopes);
         builder.scopes(scopeSet);
 
         Map<String, Object> additionalParameters = new LinkedHashMap<>();
         additionalParameters.put("openid", openid);
-
         builder.additionalParameters(additionalParameters);
         return builder.build();
     }

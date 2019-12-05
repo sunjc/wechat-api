@@ -30,7 +30,6 @@ public class WeChatOAuth2User implements OAuth2User {
     private String nameAttributeKey;
 
     public static WeChatOAuth2User build(String json, String userNameAttributeName) {
-        log.debug("Weixin user info: " + json);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             WeChatOAuth2User user = objectMapper.readValue(json, WeChatOAuth2User.class);

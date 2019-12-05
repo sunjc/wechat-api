@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import static org.itrunner.wechat.config.WeChatConstants.WEIXIN_REGISTRATION_ID;
+
 @Slf4j
 public class WeChatAuthorizationCodeTokenResponseClient implements OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
     private static final String INVALID_TOKEN_RESPONSE_ERROR_CODE = "invalid_token_response";
@@ -23,6 +26,8 @@ public class WeChatAuthorizationCodeTokenResponseClient implements OAuth2AccessT
     private Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> requestEntityConverter = new WeChatAuthorizationCodeGrantRequestEntityConverter();
 
     private RestOperations restOperations;
+
+    private DefaultAuthorizationCodeTokenResponseClient defaultAuthorizationCodeTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
 
     public WeChatAuthorizationCodeTokenResponseClient() {
         RestTemplate restTemplate = new RestTemplate();
@@ -33,6 +38,10 @@ public class WeChatAuthorizationCodeTokenResponseClient implements OAuth2AccessT
     @Override
     public OAuth2AccessTokenResponse getTokenResponse(OAuth2AuthorizationCodeGrantRequest authorizationCodeGrantRequest) {
         Assert.notNull(authorizationCodeGrantRequest, "authorizationCodeGrantRequest cannot be null");
+
+        if (!authorizationCodeGrantRequest.getClientRegistration().getRegistrationId().equals(WEIXIN_REGISTRATION_ID)) {
+            return defaultAuthorizationCodeTokenResponseClient.getTokenResponse(authorizationCodeGrantRequest);
+        }
 
         RequestEntity<?> request = this.requestEntityConverter.convert(authorizationCodeGrantRequest);
 

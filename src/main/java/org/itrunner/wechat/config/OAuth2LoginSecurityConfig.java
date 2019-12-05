@@ -28,7 +28,7 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().headers().disable()
                 .oauth2Login(oauth2Login ->
                         oauth2Login.authorizationEndpoint(authorizationEndpoint ->
-                                authorizationEndpoint.authorizationRequestResolver(new WeChatAuthorizationRequestResolver(this.clientRegistrationRepository))
+                                authorizationEndpoint.authorizationRequestResolver(new WeChatOAuth2AuthorizationRequestResolver(this.clientRegistrationRepository))
                         ).tokenEndpoint(tokenEndpoint ->
                                 tokenEndpoint.accessTokenResponseClient(new WeChatAuthorizationCodeTokenResponseClient())
                         ).userInfoEndpoint(userInfoEndpoint ->

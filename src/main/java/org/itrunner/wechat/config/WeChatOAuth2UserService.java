@@ -1,9 +1,11 @@
 package org.itrunner.wechat.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,6 +18,11 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+
+import static org.itrunner.wechat.config.WeChatConstants.WEIXIN_REGISTRATION_ID;
+
+@Slf4j
 public class WeChatOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private static final String MISSING_USER_INFO_URI_ERROR_CODE = "missing_user_info_uri";
     private static final String MISSING_USER_NAME_ATTRIBUTE_ERROR_CODE = "missing_user_name_attribute";
@@ -23,6 +30,8 @@ public class WeChatOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private Converter<OAuth2UserRequest, RequestEntity<?>> requestEntityConverter = new WeChatUserRequestEntityConverter();
     private RestOperations restOperations;
+
+    private DefaultOAuth2UserService defaultOAuth2UserService = new DefaultOAuth2UserService();
 
     public WeChatOAuth2UserService() {
         RestTemplate restTemplate = new RestTemplate();
@@ -34,21 +43,24 @@ public class WeChatOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         Assert.notNull(userRequest, "userRequest cannot be null");
 
+        if (!userRequest.getClientRegistration().getRegistrationId().equals(WEIXIN_REGISTRATION_ID)) {
+            return defaultOAuth2UserService.loadUser(userRequest);
+        }
+
         if (!StringUtils.hasText(userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri())) {
             OAuth2Error oauth2Error = new OAuth2Error(MISSING_USER_INFO_URI_ERROR_CODE,
-                    "Missing required UserInfo Uri in UserInfoEndpoint for Client Registration: " + userRequest.getClientRegistration().getRegistrationId(),
+                    "Missing required UserInfo Uri in UserInfoEndpoint for Client Registration: "
+                            + userRequest.getClientRegistration().getRegistrationId(),
                     null);
             throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
         }
 
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         if (!StringUtils.hasText(userNameAttributeName)) {
-            OAuth2Error oauth2Error = new OAuth2Error(
-                    MISSING_USER_NAME_ATTRIBUTE_ERROR_CODE,
-                    "Missing required \"user name\" attribute name in UserInfoEndpoint for Client Registration: " +
-                            userRequest.getClientRegistration().getRegistrationId(),
-                    null
-            );
+            OAuth2Error oauth2Error = new OAuth2Error(MISSING_USER_NAME_ATTRIBUTE_ERROR_CODE,
+                    "Missing required \"user name\" attribute name in UserInfoEndpoint for Client Registration: "
+                            + userRequest.getClientRegistration().getRegistrationId(),
+                    null);
             throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
         }
 
@@ -77,6 +89,11 @@ public class WeChatOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
 
         String userAttributes = response.getBody();
+        try {
+            userAttributes = new String(userAttributes.getBytes("ISO-8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("An error occurred while attempting to encode userAttributes: " + e.getMessage());
+        }
         return WeChatOAuth2User.build(userAttributes, userNameAttributeName);
     }
 }
