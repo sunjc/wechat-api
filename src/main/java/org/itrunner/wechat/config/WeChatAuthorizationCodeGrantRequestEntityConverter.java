@@ -19,11 +19,15 @@ import static org.itrunner.wechat.config.WeChatConstants.WEIXIN_ACCESS_TOKEN_URL
 public class WeChatAuthorizationCodeGrantRequestEntityConverter implements Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> {
     @Override
     public RequestEntity<?> convert(OAuth2AuthorizationCodeGrantRequest authorizationCodeGrantRequest) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.TEXT_PLAIN));
-
+        HttpHeaders headers = getTokenRequestHeaders();
         URI uri = buildUri(authorizationCodeGrantRequest);
         return new RequestEntity<>(headers, HttpMethod.GET, uri);
+    }
+
+    private HttpHeaders getTokenRequestHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.TEXT_PLAIN));
+        return headers;
     }
 
     private URI buildUri(OAuth2AuthorizationCodeGrantRequest authorizationCodeGrantRequest) {

@@ -17,11 +17,15 @@ import static org.itrunner.wechat.config.WeChatConstants.WEIXIN_USER_INFO_URL_FO
 public class WeChatUserRequestEntityConverter implements Converter<OAuth2UserRequest, RequestEntity<?>> {
     @Override
     public RequestEntity<?> convert(OAuth2UserRequest userRequest) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.TEXT_PLAIN));
-
+        HttpHeaders headers = getUserRequestHeaders();
         URI uri = buildUri(userRequest);
         return new RequestEntity<>(headers, HttpMethod.GET, uri);
+    }
+
+    private HttpHeaders getUserRequestHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.TEXT_PLAIN));
+        return headers;
     }
 
     private URI buildUri(OAuth2UserRequest userRequest) {
