@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.itrunner.wechat.util.JsonUtil.asJson;
@@ -54,7 +53,7 @@ class HeroControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockOAuth2User
     void addHeroValidationFailed() throws Exception {
         Hero hero = new Hero();
         mvc.perform(post("/heroes").content(asJson(hero)).contentType(MediaType.APPLICATION_JSON))
