@@ -22,6 +22,7 @@ spring:
             redirect-uri: http://wechat.itrunner.org/login/oauth2/code/weixin
             authorization-grant-type: authorization_code
             scope: snsapi_userinfo
+            client-name: WeiXin
         provider:
           weixin:
             authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
