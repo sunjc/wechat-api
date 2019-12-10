@@ -2,10 +2,10 @@ package org.itrunner.wechat.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.itrunner.wechat.util.JsonUtils;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 
@@ -30,8 +30,7 @@ public class WeChatAccessTokenResponse {
 
     public static WeChatAccessTokenResponse build(String json) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, WeChatAccessTokenResponse.class);
+            return JsonUtils.parseJson(json, WeChatAccessTokenResponse.class);
         } catch (JsonProcessingException e) {
             log.error("An error occurred while attempting to parse the WeiXin Access Token Response: " + e.getMessage());
             return null;
