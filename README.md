@@ -7,5 +7,5 @@
 基本配置，获取AppID和AppSecret替换application.yml weixin配置中的client-id和client-secret; 根据您使用的域名修改redirect-uri。
 
 ## 启动应用
-启动WeChatApplication，访问http://yourhost/heroes则会自动跳转到登录页面，登录成功后会输出hero信息。
+启动WeChatApplication，访问 http://yourhost/heroes 则会自动跳转到登录页面，登录成功后会输出hero信息。
 如使用微信公众平台帐号，则只能在微信客户端或微信开发者工具中访问页面。
