@@ -2,8 +2,8 @@ package org.itrunner.wechat.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.itrunner.wechat.util.JsonUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -31,8 +31,7 @@ public class WeChatOAuth2User implements OAuth2User {
 
     public static WeChatOAuth2User build(String json, String userNameAttributeName) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            WeChatOAuth2User user = objectMapper.readValue(json, WeChatOAuth2User.class);
+            WeChatOAuth2User user = JsonUtils.parseJson(json, WeChatOAuth2User.class);
             user.nameAttributeKey = userNameAttributeName;
             user.setAttributes();
             user.setAuthorities();
